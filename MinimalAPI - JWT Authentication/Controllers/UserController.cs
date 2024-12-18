@@ -8,7 +8,7 @@ using MinimalAPI___JWT_Authentication.Services;
 namespace MinimalAPI___JWT_Authentication.Controllers
 {
     [Route("api/users")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {

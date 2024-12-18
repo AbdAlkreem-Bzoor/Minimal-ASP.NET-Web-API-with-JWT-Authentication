@@ -9,15 +9,15 @@ namespace MinimalAPI___JWT_Authentication.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly JwtTokenGenerator _jwtTokenGenerator;
-        public AuthenticationController(JwtTokenGenerator jwtTokenGenerator) 
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        public AuthenticationController(IJwtTokenGenerator jwtTokenGenerator) 
         {
             _jwtTokenGenerator = jwtTokenGenerator ?? throw new ArgumentNullException(nameof(jwtTokenGenerator));
         }
         [HttpPost("authenticate")]
-        public ActionResult<string> Authenticate(User user)
+        public async Task<ActionResult<string>> Authenticate(User user)
         {
-            var token = _jwtTokenGenerator.GenerateToken(user.UserName, user.Password);
+            var token = await _jwtTokenGenerator.GenerateToken(user.UserName, user.Password);
 
             if (token is null)
             {
@@ -26,6 +26,10 @@ namespace MinimalAPI___JWT_Authentication.Controllers
 
             return Ok(token);
         }
-
+        [HttpGet]
+        public ActionResult<bool> ValidateToken(string token)
+        {
+            return Ok(_jwtTokenGenerator.ValidateToken(token));
+        }
     }
 }
